@@ -1,0 +1,50 @@
+name: Verify application
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: 项目代码库
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: effectiveness_test
+          POSTGRES_USER: effectiveness
+          POSTGRES_PASSWORD: local-ci-test-password
+        ports:
+          - 5432/tcp
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: npm ci
+      - run: npm run build
+      - run: npm run validate
+      - run: npm test
+      - run: npm run test:postgres
+        env:
+          POSTGRES_TEST_DATABASE_URL: postgresql://effectiveness:local-ci-test-password@127.0.0.1:${{ job.services.postgres.ports[5432] }}/effectiveness_test
+      - run: docker exec ${{ job.services.postgres.id }} createdb -U effectiveness effectiveness_upgrade_test
+      - run: npm run test:postgres:upgrade
+        env:
+          POSTGRES_UPGRADE_TEST_DATABASE_URL: postgresql://effectiveness:local-ci-test-password@127.0.0.1:${{ job.services.postgres.ports[5432] }}/effectiveness_upgrade_test

@@ -1,0 +1,29 @@
+{
+  "asOf": "2026-09-25T12:00:00Z",
+  "records": [
+    {
+      "instanceId": "demo-1",
+      "stageId": "development",
+      "path": "standard",
+      "priority": "P0",
+      "startedAt": "2026-09-25T00:00:00Z",
+      "endedAt": "2026-09-25T04:00:00Z"
+    },
+    {
+      "instanceId": "demo-2",
+      "stageId": "development",
+      "path": "standard",
+      "priority": "P0",
+      "startedAt": "2026-09-25T00:00:00Z",
+      "endedAt": "2026-09-25T10:00:00Z"
+    },
+    {
+      "instanceId": "demo-3",
+      "stageId": "development",
+      "path": "standard",
+      "priority": "P0",
+      "startedAt": "2026-09-25T00:00:00Z",
+      "status": "active"
+    }
+  ]
+}

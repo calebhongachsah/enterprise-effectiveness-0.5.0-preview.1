@@ -1,0 +1,56 @@
+{
+  "name": "enterprise-effectiveness-operations",
+  "version": "0.5.0-preview.1",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n api,web -c blue,green \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "tsx watch apps/api/src/server.ts",
+    "dev:web": "vite --config apps/web/vite.config.ts",
+    "build": "vite build --config apps/web/vite.config.ts && tsc -p apps/api/tsconfig.json --noEmit",
+    "start": "tsx apps/api/src/server.ts",
+    "test": "node --import tsx --test tests/*.test.*",
+    "test:postgres": "node --import tsx scripts/validate-postgres-business.ts",
+    "test:postgres:upgrade": "node --import tsx scripts/validate-postgres-upgrade.ts",
+    "validate": "node scripts/validate.mjs && node scripts/validate-migrations.mjs",
+    "validate:infra": "node scripts/validate-migrations.mjs",
+    "migrate:postgres": "node --env-file-if-exists=infra/.env --import tsx scripts/migrate-postgres.ts",
+    "backup:postgres": "node --env-file-if-exists=infra/.env --import tsx scripts/backup-postgres.ts",
+    "restore:postgres": "node --env-file-if-exists=infra/.env --import tsx scripts/restore-postgres.ts",
+    "deploy:up": "docker compose --env-file infra/.env -f infra/docker-compose.yml up -d --build",
+    "deploy:down": "docker compose --env-file infra/.env -f infra/docker-compose.yml down",
+    "deploy:stop-app": "docker compose --env-file infra/.env -f infra/docker-compose.yml stop app",
+    "deploy:start-app": "docker compose --env-file infra/.env -f infra/docker-compose.yml start app",
+    "deploy:status": "docker compose --env-file infra/.env -f infra/docker-compose.yml ps",
+    "deploy:logs": "docker compose --env-file infra/.env -f infra/docker-compose.yml logs -f app",
+    "generate:v02-data": "tsx scripts/generate-v02-simulated-data.ts",
+    "reset:v03-demo-source": "tsx scripts/reset-v03-demo-source.ts",
+    "benchmark:v02": "tsx scripts/benchmark-v02-postgres.ts",
+    "benchmark:v03": "tsx scripts/benchmark-v03-data-source.ts",
+    "demo": "node scripts/demo.mjs"
+  },
+  "dependencies": {
+    "echarts": "^6.0.0",
+    "papaparse": "^5.5.3",
+    "pg": "^8.23.1",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.1",
+    "@types/papaparse": "^5.3.16",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.2",
+    "concurrently": "^9.2.1",
+    "prettier": "^3.9.9",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "vite": "^7.3.8"
+  }
+}

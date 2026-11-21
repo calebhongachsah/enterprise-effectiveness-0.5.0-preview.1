@@ -1,0 +1,117 @@
+{
+  "id": "software-delivery",
+  "name": "软件研发（通用性示例）",
+  "version": "0.1.0",
+  "clock": "elapsed_hours",
+  "paths": [
+    "standard",
+    "hotfix"
+  ],
+  "scope": "阈值仅为演示，非行业标准或已确认业务要求",
+  "stages": [
+    {
+      "id": "requirements",
+      "name": "需求",
+      "entity": "work_item",
+      "from": "requirements_started",
+      "to": "requirements_completed",
+      "owner": "product",
+      "paths": [
+        "standard",
+        "hotfix"
+      ],
+      "slaHours": {
+        "P0": 4,
+        "P1": 12,
+        "P2": 24
+      }
+    },
+    {
+      "id": "design",
+      "name": "设计",
+      "entity": "work_item",
+      "from": "design_started",
+      "to": "design_completed",
+      "owner": "designer",
+      "paths": [
+        "standard"
+      ],
+      "slaHours": {
+        "P0": 4,
+        "P1": 12,
+        "P2": 24
+      }
+    },
+    {
+      "id": "development",
+      "name": "开发",
+      "entity": "work_item",
+      "from": "development_started",
+      "to": "development_completed",
+      "owner": "engineer",
+      "paths": [
+        "standard",
+        "hotfix"
+      ],
+      "slaHours": {
+        "P0": 8,
+        "P1": 24,
+        "P2": 48
+      }
+    },
+    {
+      "id": "testing",
+      "name": "测试",
+      "entity": "work_item",
+      "from": "testing_started",
+      "to": "testing_completed",
+      "owner": "qa",
+      "paths": [
+        "standard",
+        "hotfix"
+      ],
+      "slaHours": {
+        "P0": 4,
+        "P1": 12,
+        "P2": 24
+      }
+    },
+    {
+      "id": "release",
+      "name": "发布",
+      "entity": "work_item",
+      "from": "release_started",
+      "to": "release_completed",
+      "owner": "ops",
+      "paths": [
+        "standard",
+        "hotfix"
+      ],
+      "slaHours": {
+        "P0": 2,
+        "P1": 6,
+        "P2": 12
+      }
+    }
+  ],
+  "outcomeMetrics": [
+    {
+      "id": "release_failure_rate",
+      "grain": "release",
+      "numerator": "failed_releases",
+      "denominator": "observable_releases",
+      "operator": "lte",
+      "target": 0.1
+    }
+  ],
+  "reasonCategories": [
+    "需求不清",
+    "需求变化",
+    "环境不可用",
+    "外部依赖等待",
+    "返工"
+  ],
+  "notes": [
+    "hotfix 省略设计仅用于验证路径适用性，实际流程须与试点团队确认。"
+  ]
+}

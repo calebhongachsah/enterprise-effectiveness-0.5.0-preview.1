@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-effectiveness}
+      POSTGRES_USER: ${POSTGRES_USER:-effectiveness}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?请在 .env 中设置 POSTGRES_PASSWORD}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - ${POSTGRES_DATA_PATH:-effectiveness_postgres_data}:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${APP_DATABASE_URL:?Please set APP_DATABASE_URL in infra/.env}
+      DATA_SOURCE_MASTER_KEY: ${DATA_SOURCE_MASTER_KEY:?Please set DATA_SOURCE_MASTER_KEY in infra/.env}
+      ADMIN_BOOTSTRAP_TOKEN: ${ADMIN_BOOTSTRAP_TOKEN:-}
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
+      POSTGRES_POOL_SIZE: ${POSTGRES_POOL_SIZE:-10}
+      POSTGRES_CONNECT_TIMEOUT_MS: ${POSTGRES_CONNECT_TIMEOUT_MS:-5000}
+      POSTGRES_SSL: ${POSTGRES_SSL:-disable}
+      HOST: 0.0.0.0
+      PORT: 8787
+    ports:
+      - "${PLATFORM_BIND_HOST:-127.0.0.1}:${PLATFORM_PORT:-8787}:8787"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:8787/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+volumes:
+  effectiveness_postgres_data:

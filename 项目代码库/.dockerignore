@@ -1,0 +1,12 @@
+node_modules
+apps/web/dist
+backups
+data/*.sqlite*
+data/generated
+**/.env*
+!infra/.env.example
+**/*.pem
+**/*.key
+**/*.dump
+.DS_Store
+*.log

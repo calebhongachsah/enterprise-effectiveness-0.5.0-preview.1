@@ -1,0 +1,15 @@
+.DS_Store
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+*.sqlite*
+*.log
+*.dump
+*.pem
+*.key
+/项目代码库/backups/
+/项目代码库/data/generated/*
+!/项目代码库/data/generated/.gitignore

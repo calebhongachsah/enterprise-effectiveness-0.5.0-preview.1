@@ -1,0 +1,29 @@
+{
+  "id": "service-request",
+  "name": "服务请求（模拟示例）",
+  "version": "0.1.0",
+  "clock": "elapsed_hours",
+  "paths": ["standard", "expedited"],
+  "stages": [
+    {
+      "id": "triage",
+      "name": "受理请求",
+      "entity": "request",
+      "from": "received",
+      "to": "accepted",
+      "owner": "service-desk",
+      "paths": ["standard", "expedited"],
+      "slaHours": { "P0": 4, "P1": 8, "P2": 16 }
+    },
+    {
+      "id": "fulfillment",
+      "name": "处理标准请求",
+      "entity": "request",
+      "from": "accepted",
+      "to": "fulfilled",
+      "owner": "service-team",
+      "paths": ["standard"],
+      "slaHours": { "P0": 6, "P1": 12, "P2": 24 }
+    }
+  ]
+}

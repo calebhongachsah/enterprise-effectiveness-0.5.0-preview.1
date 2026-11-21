@@ -1,0 +1,8 @@
+{
+  "asOf": "2026-09-25T12:00:00Z",
+  "records": [
+    { "instanceId": "request-1", "stageId": "triage", "path": "standard", "priority": "P0", "startedAt": "2026-09-25T00:00:00Z", "endedAt": "2026-09-25T04:00:00Z" },
+    { "instanceId": "request-2", "stageId": "triage", "path": "standard", "priority": "P0", "startedAt": "2026-09-25T00:00:00Z", "endedAt": "2026-09-25T10:00:00Z" },
+    { "instanceId": "request-3", "stageId": "triage", "path": "standard", "priority": "P0", "startedAt": "2026-09-25T00:00:00Z", "status": "active" }
+  ]
+}
